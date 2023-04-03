@@ -1,35 +1,43 @@
 <template>
     <div>
         <index-animation></index-animation>
+        <Header background="transparent"></Header>
+        <Footer fixed></Footer>
         <div class="common">
             <div class="home">
                 <p>{{ info.introduction }}</p>
+                <!-- <p>{{ info.introduction }}</p> -->
             </div>
         </div>
     </div>
 </template>
 
 <script>
-let i = 0;
-let timer = null;
+
+
+let timerAgain;
 import IndexAnimation from '@/components/IndexAnimation';
+import Header from "@/components/Header"
+import Footer from '@/components/Footer.vue';
 export default {
     props: {
 
     },
     components: {
-        IndexAnimation
+        IndexAnimation,
+        Header,
+        Footer
     },
     data() {
         return {
             info: {
                 introduction: "",
-                introductionTarget: "I can do it!",
+                introductionTarget: "有志者,事竟成",
             },
         };
     },
     computed: {
-        introductionTargetNum() { 
+        introductionTargetNum() {
             return this.info.introductionTarget.length
         }
     },
@@ -43,19 +51,35 @@ export default {
 
     },
     methods: {
-        typing() { 
+        typing() {
+            // console.log("typingAgain",this);
+            this.info.introduction = ""
+            let i = 0;
+            let timer = null;
+            console.time("a");
 
-            if (i < this.introductionTargetNum) {
-                this.info.introduction = this.info.introductionTarget.slice(0, i++) + "_"
-                timer=setTimeout(this.typing,100)
-            } else { 
-                this.info.introduction = this.info.introductionTarget; //结束打字,移除 _ 光标
-                clearTimeout(timer);
+            let typingAgain = () => {
+                if (i <= this.info.introductionTarget.length) {
+                    this.info.introduction =
+                        this.info.introductionTarget.slice(0, i++) + "_"
+                    timer = setTimeout(typingAgain, 100);
+                } else {
+                    this.info.introduction = this.info.introductionTarget; //结束打字,移除 _ 光标
+                    clearTimeout(timer);
+                    console.timeEnd("a");
+                }
             }
-            
-        }
+            typingAgain()
+
+            timerAgain = setTimeout(this.typing, this.info.introductionTarget.length * 1000)
+        },
 
     },
+    // 删掉他，就能看到内存泄露的表现
+    beforeDestroy() {
+        clearTimeout(timerAgain);
+        this.timerAgain = null;
+    }
 };
 </script>
 
@@ -67,7 +91,11 @@ export default {
     text-align: center;
     transform: translateY(-50%);
     font-size: 0.96rem;
-    color: #fff;
+
     font-weight: 500;
+
+    p {
+        color: #fdd835;
+    }
 }
 </style>

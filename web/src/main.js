@@ -66,8 +66,14 @@ Vue.use(Form);
 Vue.use(AutoComplete);
 Vue.use(Menu);
 import Helpers from 'muse-ui/lib/Helpers';
-import { isPC } from "@/utils";
+import { isPC, isAndroid, isIPhone } from "@/utils";
 
+Vue.prototype.isPC = isPC()
+window.addEventListener("resize", () => {
+  // debugger
+  Vue.prototype.isPC = isPC()
+  // console.log("Vue.prototype.isPC:", Vue.prototype.isPC);
+})
 
 Vue.use(Helpers);
 new Vue({
