@@ -93,6 +93,10 @@ Vue.use(Loading, {
   overlayColor: "transparent", // 背景色
 });
 
+
+import axios from "@/utils/axios";
+Vue.prototype.$axios = axios;
+
 Vue.use(NProgress);
 Vue.use(Helpers);
 new Vue({
